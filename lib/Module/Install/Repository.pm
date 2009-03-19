@@ -32,6 +32,19 @@ sub _find_repo {
         if (`svn info` =~ /URL: (.*)$/m) {
             return $1;
         }
+    } elsif (-e "_darcs") {
+        # defaultrepo is better, but that is more likely to be ssh, not http
+        if (my $query_repo = `darcs query repo`) {
+            if ($query_repo =~ m!Default Remote: (http://.+)!) {
+                return $1;
+            }
+        }
+
+        open my $handle, '<', '_darcs/prefs/repos' or return;
+        while (<$handle>) {
+            chomp;
+            return $_ if m!^http://!;
+        }
     } elsif (-e "$ENV{HOME}/.svk") {
         # Is there an explicit way to check if it's an svk checkout?
         my $svk_info = `svk info` or return;
@@ -82,6 +95,8 @@ module currently works only with github.com style.
 =head1 AUTHOR
 
 Tatsuhiko Miyagawa E<lt>miyagawa@bulknews.netE<gt>
+
+Darcs support by Shawn M Moore.
 
 =head1 LICENSE
 
