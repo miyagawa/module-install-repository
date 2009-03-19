@@ -55,7 +55,7 @@ __END__
 
 =encoding utf-8
 
-=for stopwords
+=for stopwords github.com META.yml
 
 =head1 NAME
 
@@ -64,14 +64,14 @@ Module::Install::Repository - Automatically sets repository URL from svn/svk/Git
 =head1 SYNOPSIS
 
   # in Makefile.PL
-  use Module::Install;
+  use inc::Module::Install;
   auto_set_repository;
 
 =head1 DESCRIPTION
 
 Module::Install::Repository is a Module::Install plugin to
 automatically figure out repository URL and set it via I<repository()>
-which then will be added to resources under I<META.yaml>.
+which then will be added to resources under I<META.yml>.
 
 =head1 CAVEATS
 
