@@ -27,4 +27,3 @@ t/00_compile.t
 xt/perlcritic.t
 xt/pod.t
 xt/podspell.t
-
