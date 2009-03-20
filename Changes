@@ -1,4 +1,7 @@
 Revision history for Perl extension Module::Install::Repository
 
+0.02  Thu Mar 19 17:19:37 PDT 2009
+        - Get repository under 'resources' now for this distribution
+
 0.01  Thu Mar 19 12:44:29 2009
         - original version
