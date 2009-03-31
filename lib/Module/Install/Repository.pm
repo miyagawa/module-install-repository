@@ -2,7 +2,7 @@ package Module::Install::Repository;
 
 use strict;
 use 5.008_001;
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use base qw(Module::Install::Base);
 
@@ -98,7 +98,9 @@ module currently works only with github.com style.
 
 Tatsuhiko Miyagawa E<lt>miyagawa@bulknews.netE<gt>
 
-Darcs support by Shawn M Moore.
+Darcs support by Shawn M Moore
+
+git-svn support by Tokuhiro Matsuno
 
 =head1 LICENSE
 

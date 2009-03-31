@@ -1,5 +1,8 @@
 Revision history for Perl extension Module::Install::Repository
 
+0.03  Mon Mar 30 23:17:49 PDT 2009
+        - git-svn support by tokuhirom++
+
 0.02  Thu Mar 19 17:19:37 PDT 2009
         - Get repository under 'resources' now for this distribution
 
