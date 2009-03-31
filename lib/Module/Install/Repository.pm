@@ -68,7 +68,7 @@ __END__
 
 =encoding utf-8
 
-=for stopwords github.com META.yml
+=for stopwords github.com META.yml Darcs
 
 =head1 NAME
 
