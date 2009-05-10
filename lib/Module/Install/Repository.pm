@@ -6,12 +6,17 @@ our $VERSION = '0.03';
 
 use base qw(Module::Install::Base);
 
+sub _execute {
+    my ($command) = @_;
+    `$command`;
+}
+
 sub auto_set_repository {
     my $self = shift;
 
     return unless $Module::Install::AUTHOR;
 
-    my $repo = _find_repo(sub { `@_` });
+    my $repo = _find_repo(\&_execute);
     if ($repo) {
         $self->repository($repo);
     } else {
@@ -20,16 +25,16 @@ sub auto_set_repository {
 }
 
 sub _find_repo {
-    my ($x) = @_;
+    my ($execute) = @_;
 
     if (-e ".git") {
         # TODO support remote besides 'origin'?
-        if (`git remote show origin` =~ /URL: (.*)$/m) {
+        if ($execute->('git remote show origin') =~ /URL: (.*)$/m) {
             # XXX Make it public clone URL, but this only works with github
             my $git_url = $1;
             $git_url =~ s![\w\-]+\@([^:]+):!git://$1/!;
             return $git_url;
-        } elsif (`git svn info` =~ /URL: (.*)$/m) {
+        } elsif ($execute->('git svn info') =~ /URL: (.*)$/m) {
             return $1;
         }
     } elsif (-e ".svn") {
@@ -50,7 +55,7 @@ sub _find_repo {
             return $_ if m!^http://!;
         }
     } elsif (-e ".hg") {
-        if ($x->('hg paths') =~ /default = (.*)$/m) {
+        if ($execute->('hg paths') =~ /default = (.*)$/m) {
             my $mercurial_url = $1;
             $mercurial_url =~ s!^ssh://hg\@(bitbucket\.org/)!https://$1!;
             return $mercurial_url;
