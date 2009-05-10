@@ -11,7 +11,7 @@ sub auto_set_repository {
 
     return unless $Module::Install::AUTHOR;
 
-    my $repo = _find_repo();
+    my $repo = _find_repo(sub { `@_` });
     if ($repo) {
         $self->repository($repo);
     } else {
@@ -20,6 +20,8 @@ sub auto_set_repository {
 }
 
 sub _find_repo {
+    my ($x) = @_;
+
     if (-e ".git") {
         # TODO support remote besides 'origin'?
         if (`git remote show origin` =~ /URL: (.*)$/m) {
@@ -46,6 +48,12 @@ sub _find_repo {
         while (<$handle>) {
             chomp;
             return $_ if m!^http://!;
+        }
+    } elsif (-e ".hg") {
+        if ($x->('hg paths') =~ /default = (.*)$/m) {
+            my $mercurial_url = $1;
+            $mercurial_url =~ s!^ssh://hg\@(bitbucket\.org/)!https://$1!;
+            return $mercurial_url;
         }
     } elsif (-e "$ENV{HOME}/.svk") {
         # Is there an explicit way to check if it's an svk checkout?
