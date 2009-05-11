@@ -1,5 +1,9 @@
 Revision history for Perl extension Module::Install::Repository
 
+0.04  Sun May 10 17:23:39 PDT 2009
+        - Make this module compatible to Perl back in 5.5
+          (Thank to Yappo++)
+
 0.03  Mon Mar 30 23:17:49 PDT 2009
         - git-svn support by tokuhirom++
 
