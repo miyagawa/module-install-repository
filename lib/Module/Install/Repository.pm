@@ -1,8 +1,9 @@
 package Module::Install::Repository;
 
 use strict;
-use 5.008_001;
-our $VERSION = '0.03';
+use 5.005;
+use vars qw($VERSION);
+$VERSION = '0.03';
 
 use base qw(Module::Install::Base);
 
