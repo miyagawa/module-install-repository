@@ -1,6 +1,6 @@
 Revision history for Perl extension Module::Install::Repository
 
-0.05
+0.05  Wed May 13 18:26:56 PDT 2009
         - fix use of git-remote show to work offline (rjbs, fayland)
 
 0.04  Sun May 10 17:23:39 PDT 2009
