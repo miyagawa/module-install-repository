@@ -11,7 +11,7 @@ sub fake_execute {
     my ($s) = @_;
     return {
         'hg paths' => "default = http://example.com/foo/bar/\n",
-        'git remote show origin' => <<'END'
+        'git remote show -n origin' => <<'END'
 * remote origin
   URL: git@github.com:miyagawa/module-install-repository.git
   Remote branch merged with 'git pull' while on branch master
