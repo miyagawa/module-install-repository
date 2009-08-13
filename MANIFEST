@@ -1,6 +1,7 @@
 .gitignore
 Changes
 inc/attributes.pm
+inc/IO/Dir.pm
 inc/Module/Install.pm
 inc/Module/Install/AuthorTests.pm
 inc/Module/Install/Base.pm
@@ -13,11 +14,16 @@ inc/Module/Install/Repository.pm
 inc/Module/Install/TestBase.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
+inc/Path/Class.pm
+inc/Path/Class/Dir.pm
+inc/Path/Class/Entity.pm
+inc/Path/Class/File.pm
 inc/PerlIO.pm
 inc/Spiffy.pm
 inc/Test/Base.pm
 inc/Test/Base/Filter.pm
 inc/Test/Builder.pm
+inc/Test/Builder/IO/Scalar.pm
 inc/Test/Builder/Module.pm
 inc/Test/More.pm
 lib/Module/Install/Repository.pm
