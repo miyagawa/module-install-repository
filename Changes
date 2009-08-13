@@ -1,5 +1,8 @@
 Revision history for Perl extension Module::Install::Repository
 
+0.06  Wed Aug 12 17:35:30 PDT 2009
+        - Added Path::Class to test_requires (gfx)
+
 0.05  Wed May 13 18:26:56 PDT 2009
         - fix use of git-remote show to work offline (rjbs, fayland)
         - Added Mercurial support and tests for hg and Git (kzys)
