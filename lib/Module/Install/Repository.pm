@@ -29,13 +29,17 @@ sub _find_repo {
     my ($execute) = @_;
 
     if (-e ".git") {
-        # TODO support remote besides 'origin'?
-        if ($execute->('git remote show -n origin') =~ /URL: (.*)$/m) {
-            # XXX Make it public clone URL, but this only works with github
-            my $git_url = $1;
-            $git_url =~ s![\w\-]+\@([^:]+):!git://$1/!;
-            return $git_url;
-        } elsif ($execute->('git svn info') =~ /URL: (.*)$/m) {
+        foreach my $name (qw(origin github)) {
+            my $git_output = $execute->("git remote show -n $name");
+            if ($git_output =~ /Tracked remote branch/ && $git_output =~ /URL: (.*)$/m) {
+                # XXX Make it public clone URL, but this only works with github
+                my $git_url = $1;
+                $git_url =~ s![\w\-]+\@([^:]+):!git://$1/!;
+                return $git_url;
+            }
+        }
+
+        if ($execute->('git svn info') =~ /URL: (.*)$/m) {
             return $1;
         }
     } elsif (-e ".svn") {
