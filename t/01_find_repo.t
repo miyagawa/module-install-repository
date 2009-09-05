@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More tests => 3;
 
 use Module::Install::Repository;
 
@@ -22,15 +22,34 @@ END
     }->{ $s };
 }
 
+sub fake_execute2 {
+      my ($s) = @_;
+      return {
+          'git remote show -n origin' => <<'END',
+* remote origin
+  URL: origin          
+END
+          'git remote show -n github' => <<'END',
+* remote github
+  URL: git@github.com:2shortplanks/test-enhancedis.git
+    master
+  Tracked remote branch
+    master
+END
+    }->{ $s };
+  
+}
+
 sub test {
-    my ($basename) = @_;
+    my ($basename, $func) = @_;
 
     my $dir = tempdir(CLEANUP => 1);
     dir("$dir/$basename")->mkpath;
     chdir($dir);
 
-    return Module::Install::Repository::_find_repo(\&fake_execute);
+    return Module::Install::Repository::_find_repo($func);
 }
 
-is(test('.git'), 'git://github.com/miyagawa/module-install-repository.git', 'Git');
-is(test('.hg'), 'http://example.com/foo/bar/', 'Mercurial');
+is(test('.git',\&fake_execute), 'git://github.com/miyagawa/module-install-repository.git', 'Git origin');
+is(test('.git',\&fake_execute2), 'git://github.com/2shortplanks/test-enhancedis.git', 'Git github');
+is(test('.hg',\&fake_execute), 'http://example.com/foo/bar/', 'Mercurial');
