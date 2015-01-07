@@ -29,26 +29,39 @@ sub _find_repo {
     my ($execute) = @_;
 
     if (-e ".git") {
+        my $git_remotes = $execute->('git remote show -n');
+
         foreach my $name (qw(origin github)) {
-            my $git_output = $execute->("git remote show -n $name");
-            if ($git_output =~ /Tracked remote branch/ && $git_output =~ /URL: (.*)$/m) {
+            next if ($git_remotes !~ /$name/);
+
+            my $git_url = eval {
+                my $git_output = $execute->("git remote show -n $name 2>/dev/null");
+                return $1 if ($git_output =~ /tracked/i && $git_output =~ /URL: (.*)$/m);
+
+                $git_output = $execute->("git remote show $name 2>/dev/null");
+                return $1 if ($git_output =~ /tracked/i && $git_output =~ /URL: (.*)$/m);
+
+                chomp($git_output = $execute->("git ls-remote --get-url $name 2>/dev/null"));
+                return $git_output;
+            };
+
+            if ($git_url) {
                 # XXX Make it public clone URL, but this only works with github
-                my $git_url = $1;
                 $git_url =~ s![\w\-]+\@([^:]+):!git://$1/!;
                 return $git_url;
             }
         }
 
-        if ($execute->('git svn info') =~ /URL: (.*)$/m) {
+        if ($execute->('git svn info 2>/dev/null') =~ /URL: (.*)$/m) {
             return $1;
         }
     } elsif (-e ".svn") {
-        if (`svn info` =~ /URL: (.*)$/m) {
+        if ($execute->('svn info 2>/dev/null') =~ /URL: (.*)$/m) {
             return $1;
         }
     } elsif (-e "_darcs") {
         # defaultrepo is better, but that is more likely to be ssh, not http
-        if (my $query_repo = `darcs query repo`) {
+        if (my $query_repo = $execute->('darcs query repo 2>/dev/null')) {
             if ($query_repo =~ m!Default Remote: (http://.+)!) {
                 return $1;
             }
@@ -60,14 +73,15 @@ sub _find_repo {
             return $_ if m!^http://!;
         }
     } elsif (-e ".hg") {
-        if ($execute->('hg paths') =~ /default = (.*)$/m) {
+        if ($execute->('hg paths 2>/dev/null') =~ /default = (.*)$/m) {
             my $mercurial_url = $1;
             $mercurial_url =~ s!^ssh://hg\@(bitbucket\.org/)!https://$1!;
             return $mercurial_url;
         }
     } elsif (-e "$ENV{HOME}/.svk") {
         # Is there an explicit way to check if it's an svk checkout?
-        my $svk_info = `svk info` or return;
+        my $svk_info = $execute->('svk info 2>/dev/null') or return;
+
         SVK_INFO: {
             if ($svk_info =~ /Mirrored From: (.*), Rev\./) {
                 return $1;
